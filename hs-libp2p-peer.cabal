@@ -17,12 +17,10 @@ library
   hs-source-dirs:      src
   exposed-modules:     Network.Peer
   build-depends:       base >= 4.7 && < 5
-                     , multihash
-                     , text
-                     , base58-bytestring
                      , bytestring
-                     , cryptonite
-                     , secp256k1
+                     , base58-bytestring
+                     , text
+                     , multihash
   default-language:    Haskell2010
 
 test-suite hs-libp2p-peer-test

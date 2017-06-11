@@ -22,9 +22,6 @@ import Data.Typeable (Typeable)
 import Data.Data (Data)
 import Data.String (IsString, fromString)
 
-import qualified Crypto.PubKey.RSA as RSA
-import qualified Crypto.PubKey.Ed25519 as Ed25519
-import qualified Crypto.Secp256k1 as Secp256k1
 
 newtype PeerId = PeerId BSStrict.ByteString
   deriving (Show, Eq, Generic, Typeable, Data)
@@ -53,25 +50,14 @@ prettyPrint peerId = T.concat
     base58 (PeerId bs) = BSBase58.encodeBase58 BSBase58.bitcoinAlphabet bs
 
 -- these functions will need to be put into a separate module with the necessary interface fulfilled
--- this could also be reimplemented as typeclasses
+-- this should also be reimplemented as typeclasses
 
-data Key = PubKey PubKey | PrivKey PrivKey
-  deriving (Eq)
 
-data PubKey = PubRSA RSA.PublicKey
-           | PubEd25519 Ed25519.PublicKey
-           | PubSecp256k1 Secp256k1.PubKey
-            deriving (Eq)
-
-data PrivKey = PrivRSA RSA.PrivateKey
-            | PrivEd25519 Ed25519.SecretKey
-            | PrivSecp256k1 Secp256k1.SecKey
-            deriving (Eq)
-
-toPublic :: PrivKey -> PubKey
-toPublic (PrivRSA privKey) = PubRSA $ RSA.private_pub privKey
-toPublic (PrivEd25519 privKey) = PubEd25519 $ Ed25519.toPublic privKey
-toPublic (PrivSecp256k1 privKey) = PubSecp256k1 $ Secp256k1.derivePubKey privKey
+-- pubkey to bytestring
+-- then multihash sum function (bytes, SHA2_256, -1)
+-- the hash is the peerid
+keyToPeerId :: PubKey -> PeerId
+keyToPeerId = undefined
 
 matchesPrivKey :: PeerId -> PrivKey -> Bool
 matchesPrivKey peerId privKey = matchesPubKey peerId $ toPublic privKey
@@ -79,6 +65,20 @@ matchesPrivKey peerId privKey = matchesPubKey peerId $ toPublic privKey
 matchesPubKey :: PeerId -> PubKey -> Bool
 matchesPubKey peerId pubKey = undefined
 
+-- sum takes bytes, a code, a length
+-- and returns a multihash
+-- sum obtains the cryptographic sum of a given buffer
+-- the length parameter indicates the length of the resulting digest
+-- and a negative value uses the default length values for the selected hash function
+-- first we check length to see if it is valid, sounds like you can just give it a maybe int to represent whether you want a custom length
+-- oh wait, if it is -1, and the hash doesn't have a default length then you are screwed, and return an error
+-- ok... but then we need to consume the either type into a bool
+-- but it's a separate kind of error
+-- then we switch on the different hash codes that was entered
+-- this is all part of some sum function in multihash which doesn't exist here? that's weird
+-- the code parameter is equivalent is to: HashAlgorithm which contains SHA1, SHA256, SHA512, SHA3, BLAKE2B, BLAKE2S, there's a function called fromCode that takes an int and returns the hash algo
+-- the go impl is passing the actual code for the algo
+-- 
 
 
 {-
@@ -121,3 +121,6 @@ the decode
 
 -}
 
+-- a peer id is a sha256 multihash of a public key
+-- a public key is a base64 encoded string of a protobuf containing a RSA DER buffer
+-- one way to represent a peer id, is the id itself and the ability to carry around the private key and the public key, that's how the javascript does it
