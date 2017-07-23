@@ -6,8 +6,7 @@
 module Network.Data.PeerId where
 
 import qualified Data.Text as T
-import qualified Data.Text.Lazy as TLazy
-import qualified Data.Text.Lazy.Encoding as TLazyEncoding
+import qualified Data.Text.Encoding as TEncoding
 import qualified Data.ByteString as BSStrict
 import qualified Data.ByteString.Lazy as BSLazy
 import qualified Data.ByteString.Char8 as BSStrictChar
@@ -36,42 +35,38 @@ instance IsString PeerId where
 fromBytes :: BSStrict.ByteString -> Either String PeerId
 fromBytes bs = fmap PeerId $ MHD.decode bs
 
--- Create a Peer ID from a multihash base encoded string
-fromBaseEncodedString :: MHB.BaseEncoding -> T.Text -> Either String PeerId
-fromBaseEncodedString base s = do
-  rawhash <- MHB.decode base $ TLazyEncoding.encodeUtf8 $TLazy.fromStrict s
-  mhd <- fromBytes $ BSLazy.toStrict $ rawhash 
-  return mhd
+-- Create a Peer ID from a base encoded bytestring representing a multihash
+fromBase :: MHB.BaseEncoding -> BSStrict.ByteString -> Either String PeerId
+fromBase base bs = (fmap BSLazy.toStrict $ MHB.decode base $ BSLazy.fromStrict bs) >>= fromBytes
 
--- Convenience methods for fromBaseEncodedString
-fromHexString :: T.Text -> Either String PeerId
-fromHexString = fromBaseEncodedString MHB.Base16
+-- Convenience methods for fromBase
+fromHex :: BSStrict.ByteString -> Either String PeerId
+fromHex = fromBase MHB.Base16
 
--- Convenience methods for fromBaseEncodedString
-fromB58String :: T.Text -> Either String PeerId
-fromB58String = fromBaseEncodedString MHB.Base58
+-- Convenience methods for fromBase
+fromB58 :: BSStrict.ByteString -> Either String PeerId
+fromB58 = fromBase MHB.Base58
 
--- Convenience methods for fromBaseEncodedString
-fromB64String :: T.Text -> Either String PeerId
-fromB64String = fromBaseEncodedString MHB.Base64
+-- Convenience methods for fromBase
+fromB64 :: BSStrict.ByteString -> Either String PeerId
+fromB64 = fromBase MHB.Base64
 
-
--- prettyPrint :: PeerId -> T.Text
--- prettyPrint peerId = T.concat
---   [
---     "<peer.ID ",
---     T.take maxChars $ filter $ TEncoding.decodeUtf8 $ peerId,
---     ">"
---   ]
---   where
---     maxChars = 6
---     filter t = maybe t id $ T.stripPrefix "Qm" t
---     base58 (PeerId bs) = MHB.encode MHB.Base58 bs
+prettyPrint :: PeerId -> T.Text
+prettyPrint peerId = T.concat
+  [
+    "<peer.ID ",
+    T.take maxChars $ filter $ TEncoding.decodeUtf8 
+    $ MHD.digest
+    $ peerHash peerId,
+    ">"
+  ]
+  where
+    maxChars = 6
+    filter t = maybe t id $ T.stripPrefix "Qm" t
 
 -- TODO: Until the issues with haskell-libp2p-crypto are resolved,
 -- leave key resolution out of representations of a PeerId,
 -- and only get PeerIds from fromBytes
-
 -- keyToPeerId :: (PubKey a) => a -> PeerId
 -- keyToPeerId pubkey = PeerId . MHD.digest $ MHD.encode SHA256 $ toBytes pubkey
 
