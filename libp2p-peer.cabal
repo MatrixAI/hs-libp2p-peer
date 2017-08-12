@@ -22,7 +22,7 @@ library
                      , base58-bytestring
                      , text
                      , multihash
-                     --, libp2p-crypto
+                     , libp2p-crypto
   default-language:    Haskell2010
 
 test-suite libp2p-peer-test
