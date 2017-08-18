@@ -11,10 +11,11 @@ packages:
   extra-dep: true
 - location:
     git: git@github.com:MatrixAI/haskell-libp2p-crypto.git
-    commit: 6a1a9d95a9e96adac5b09530cf3657080a36bd54
+    commit: e922068ad28954efeadd599a28aefa0c457d93ad
   extra-dep: true
 extra-deps:
 - base58-bytestring-0.1.0
 - hprotoc-2.4.2
 - secp256k1-0.4.8
+- haskell-src-exts-1.17.1
 resolver: lts-9.0
