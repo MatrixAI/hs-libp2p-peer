@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-|
 Module      : Network.LibP2P.PeerId
@@ -16,6 +17,7 @@ module Network.LibP2P.PeerId where
 import qualified Crypto.LibP2P.Serialize as Crypto
 
 import qualified Data.Text               as T
+import qualified STMContainers.Set       as STMC
 import qualified Data.Text.Encoding      as TE
 import qualified Data.ByteString         as BS
 import qualified Data.ByteString.Lazy    as BSL
@@ -23,8 +25,13 @@ import qualified Data.Multihash.Base     as MHB
 import qualified Data.Multihash.Digest   as MHD
 import qualified Crypto.PubKey.RSA       as RSA
 
+import           GHC.Generics               (Generic)
+
 newtype PeerId = PeerId { unPeerId :: MHD.MultihashDigest } 
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+-- Threadsafe collection of PeerIds
+type PeerSet = STMC.Set PeerId
 
 prettyPrint :: PeerId -> T.Text
 prettyPrint peerId = T.concat
