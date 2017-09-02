@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-|
 Module      : Network.LibP2P.PeerId
 Description : Multihash public key identities for LibP2P
@@ -18,9 +19,9 @@ import qualified Data.Text               as T
 import qualified Data.Text.Encoding      as TE
 import qualified Data.ByteString         as BS
 import qualified Data.ByteString.Lazy    as BSL
-import qualified Data.ByteString.Char8   as BSChar
 import qualified Data.Multihash.Base     as MHB
 import qualified Data.Multihash.Digest   as MHD
+import qualified Crypto.PubKey.RSA       as RSA
 
 newtype PeerId = PeerId { unPeerId :: MHD.MultihashDigest } 
   deriving (Show, Eq)
@@ -74,11 +75,16 @@ fromB64 = fromBase MHB.Base64
 -- Return the byte representation of the Peer ID
 -- (i.e. the SHA256 multihash of an RSA key)
 toBytes :: PeerId -> BS.ByteString
-toBytes pid = unPeerId pid
+toBytes pid = MHD.digest $ unPeerId pid
 
 -- Return a base encoded byte representation of the Peer ID multhash digest
 toBase :: MHB.BaseEncoding -> PeerId -> BS.ByteString
-toBase base pid = MHB.encode base $ unPeerId pid
+toBase base pid = 
+  BSL.toStrict
+  $ MHB.encode base 
+  $ BSL.fromStrict
+  $ MHD.digest 
+  $ unPeerId pid
 
 -- Convenience methods for toBase
 toHex :: PeerId -> BS.ByteString
