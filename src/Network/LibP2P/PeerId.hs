@@ -112,3 +112,9 @@ rsaToPeerId pk = PeerId mhd
       BSL.toStrict 
       $ MHD.encode MHD.SHA256 
       $ Crypto.serialize pk
+
+matchesRSAPublicKey :: RSA.PublicKey -> PeerId -> Bool
+matchesRSAPublicKey pk pid = (rsaToPeerId pk) == pid 
+
+matchesRSAPrivateKey :: RSA.PrivateKey -> PeerId -> Bool
+matchesRSAPrivateKey sk pid = (rsaToPeerId $ Crypto.toPublic sk) == pid
