@@ -1,5 +1,5 @@
 {-|
-Module      : Network.Data.PeerId
+Module      : Network.LibP2P.PeerId
 Description : Multihash public key identities for LibP2P
 License     : Apache-2.0
 Maintainer  : quoc.ho@matrix.ai
@@ -10,7 +10,7 @@ This is used as an identifier through the LibP2P system.
 At the moment, we exclusively use RSA public keys, pending changes to 
 the reference libp2p-crypto implementation to use a wrapped key type (multikey).
 -}
-module Network.Data.PeerId where
+module Network.LibP2P.PeerId where
 
 import qualified Crypto.LibP2P.Serialize as Crypto
 

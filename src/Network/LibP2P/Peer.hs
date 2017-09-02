@@ -1,4 +1,4 @@
-module Network.Data.Peer where
+module Network.LibP2P.PeerSet where
 
 data Peer = 
   Peer

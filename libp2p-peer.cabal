@@ -15,8 +15,8 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Network.Data.PeerId,
-                       Network.Data.Peer
+  exposed-modules:     Network.LibP2P.PeerId,
+                       Network.LibP2P.PeerSet
   build-depends:       base >= 4.7 && < 4.10
                      , bytestring
                      , base58-bytestring
