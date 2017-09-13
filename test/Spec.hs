@@ -1,47 +1,47 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
-import Network.LibP2P.PeerId
+import           Network.LibP2P.PeerId
 
 import qualified Crypto.LibP2P.Key          as Crypto
-import qualified Crypto.LibP2P.PubKey       as Crypto
-import qualified Crypto.LibP2P.PrivKey      as Crypto
-import qualified Crypto.LibP2P.Serialize    as Crypto
 import qualified Crypto.LibP2P.Parse        as Crypto
+import qualified Crypto.LibP2P.PrivKey      as Crypto
+import qualified Crypto.LibP2P.PubKey       as Crypto
+import qualified Crypto.LibP2P.Serialize    as Crypto
 import qualified Crypto.PubKey.RSA          as RSA
 
 import qualified Data.Aeson                 as Aeson
 import qualified Data.ByteArray             as BA
 import qualified Data.ByteString            as BS
-import qualified Data.ByteString.Lazy       as BSL
 import qualified Data.ByteString.Char8      as BSChar
+import qualified Data.ByteString.Lazy       as BSL
 import qualified Data.ByteString.Lazy.Char8 as BSLChar
 import qualified Data.Multihash.Base        as MHB
 import qualified Data.Multihash.Digest      as MHD
 
 import qualified Test.Tasty                 as Tasty
-import qualified Test.Tasty.QuickCheck      as Tasty
 import qualified Test.Tasty.HUnit           as Tasty
+import qualified Test.Tasty.QuickCheck      as Tasty
 
 import qualified Test.QuickCheck            as QC
 import qualified Test.QuickCheck.Arbitrary  as QC
 import qualified Test.QuickCheck.Gen        as QC
 import qualified Test.QuickCheck.Monadic    as QC
 
-import           Crypto.Random.Types           (MonadRandom(..)) 
-import           Control.Monad                 (replicateM, liftM2) 
-import           Data.Word                     (Word8) 
-import           GHC.Generics                  (Generic)
+import           Control.Monad              (liftM2, replicateM)
+import           Crypto.Random.Types        (MonadRandom (..))
+import           Data.Word                  (Word8)
+import           GHC.Generics               (Generic)
 
 
 data RSAKeyPeerIdPair = RSAKeyPeerIdPair {
-    base58PeerId :: String, 
+    base58PeerId        :: String,
     base64RSAPrivateKey :: String
 } deriving (Generic, Show)
 
 
 instance Aeson.FromJSON RSAKeyPeerIdPair
 instance Aeson.ToJSON RSAKeyPeerIdPair
- 
+
 
 -- Adds the ability for quickcheck generators to supply random bytes
 instance MonadRandom QC.Gen where
@@ -86,7 +86,7 @@ prop_matchPrivateKey sk = matchesRSAPrivateKey sk pid
 
 
 quickCheckTests :: Tasty.TestTree
-quickCheckTests = 
+quickCheckTests =
   Tasty.testGroup "QuickCheck Tests"
   $ [ Tasty.testProperty "Test that a peerId is the same after \
                       \encoding and decoding"
@@ -124,7 +124,7 @@ main :: IO ()
 main = do
   file <- BS.readFile "test/RSATestCases.json"
   let Just rsakp = (Aeson.decodeStrict file :: Maybe [RSAKeyPeerIdPair])
-  let runTests = Tasty.testGroup "All Tests" 
+  let runTests = Tasty.testGroup "All Tests"
                    $ [ quickCheckTests
                      , unitRSATests rsakp ]
   Tasty.defaultMain runTests
