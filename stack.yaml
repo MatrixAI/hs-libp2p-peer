@@ -7,7 +7,7 @@ packages:
 - .
 - location:
     git: git@github.com:MatrixAI/haskell-multihash.git
-    commit: 0c95cb0efb72c6d3dc1cd1e092be75f5a0f78210
+    commit: b604fab178d24e3fcb5b638e5bcba6b2e9265fb6 
   extra-dep: true
 - location:
     git: git@github.com:MatrixAI/haskell-libp2p-crypto.git

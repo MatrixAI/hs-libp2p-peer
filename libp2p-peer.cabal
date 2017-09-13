@@ -32,7 +32,17 @@ test-suite libp2p-peer-test
   hs-source-dirs:      test
   main-is:             Spec.hs
   build-depends:       base
+                     , aeson
+                     , bytestring
+                     , cryptonite
                      , libp2p-peer
+                     , libp2p-crypto
+                     , memory
+                     , multihash
+                     , QuickCheck
+                     , tasty
+                     , tasty-hunit
+                     , tasty-quickcheck
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
