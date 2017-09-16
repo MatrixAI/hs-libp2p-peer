@@ -14,19 +14,19 @@ the reference libp2p-crypto implementation to use a wrapped key type (multikey).
 -}
 module Network.LibP2P.PeerId where
 
-import qualified Crypto.LibP2P.PrivKey   as Crypto
-import qualified Crypto.LibP2P.Serialize as Crypto
+import qualified Crypto.LibP2P.PrivateKey as Crypto
+import qualified Crypto.LibP2P.Serialize  as Crypto
 
-import qualified Crypto.PubKey.RSA       as RSA
-import qualified Data.ByteString         as BS
-import qualified Data.ByteString.Lazy    as BSL
-import qualified Data.Multihash.Base     as MHB
-import qualified Data.Multihash.Digest   as MHD
-import qualified Data.Text               as T
-import qualified Data.Text.Encoding      as TE
-import qualified STMContainers.Set       as STMC
+import qualified Crypto.PubKey.RSA        as RSA
+import qualified Data.ByteString          as BS
+import qualified Data.ByteString.Lazy     as BSL
+import qualified Data.Multihash.Base      as MHB
+import qualified Data.Multihash.Digest    as MHD
+import qualified Data.Text                as T
+import qualified Data.Text.Encoding       as TE
+import qualified STMContainers.Set        as STMC
 
-import           GHC.Generics            (Generic)
+import           GHC.Generics             (Generic)
 
 
 newtype PeerId = PeerId { unPeerId :: MHD.MultihashDigest }

@@ -7,15 +7,15 @@ packages:
 - .
 - location:
     git: git@github.com:MatrixAI/haskell-multihash.git
-    commit: b604fab178d24e3fcb5b638e5bcba6b2e9265fb6 
+    commit: abd0cffac2b66e658e9345437a03d31fe7779ddc 
   extra-dep: true
 - location:
     git: git@github.com:MatrixAI/haskell-libp2p-crypto.git
-    commit: ccd135c96552ef2b8896e692a620f11c75fcb78a
+    commit: b38d190acfea41623725b7e3f7cb642abf6540de
   extra-dep: true
 extra-deps:
 - base58-bytestring-0.1.0
-- hprotoc-2.4.2
+- hprotoc-2.4.3
 - secp256k1-0.4.8
 - haskell-src-exts-1.17.1
-resolver: lts-9.0
+resolver: lts-9.4

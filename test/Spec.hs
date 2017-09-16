@@ -4,8 +4,8 @@ import           Network.LibP2P.PeerId
 
 import qualified Crypto.LibP2P.Key          as Crypto
 import qualified Crypto.LibP2P.Parse        as Crypto
-import qualified Crypto.LibP2P.PrivKey      as Crypto
-import qualified Crypto.LibP2P.PubKey       as Crypto
+import qualified Crypto.LibP2P.PrivateKey   as Crypto
+import qualified Crypto.LibP2P.PublicKey    as Crypto
 import qualified Crypto.LibP2P.Serialize    as Crypto
 import qualified Crypto.PubKey.RSA          as RSA
 
